@@ -391,57 +391,53 @@ const create = async (req, res) => {
 };
 
 const show = async (req, res) => {
+  const { search, filter } = req.query;
+
   try {
-      const { search, searchBy } = req.query; // Get search query and filter type
-      let result;
+    let query;
 
-      if (search && searchBy) {
-          switch (searchBy.toLowerCase()) {
-              case "name":
-                  result = await sql`
-                      SELECT * FROM Tournaments 
-                      WHERE LOWER(Name) LIKE ${'%' + search.toLowerCase() + '%'} 
-                      ORDER BY Date ASC
-                  `;
-                  break;
-              case "gameid":
-                  result = await sql`
-                      SELECT * FROM Tournaments 
-                      WHERE GameID::TEXT LIKE ${'%' + search + '%'} 
-                      ORDER BY Date ASC
-                  `;
-                  break;
-              case "status":
-                  result = await sql`
-                      SELECT * FROM Tournaments 
-                      WHERE LOWER(Status) LIKE ${'%' + search.toLowerCase() + '%'} 
-                      ORDER BY Date ASC
-                  `;
-                  break;
-              default:
-                  return res.status(400).json({ error: "Invalid search filter" });
-          }
-      } else {
-          result = await sql`
-              SELECT * FROM Tournaments ORDER BY Date ASC
-          `;
+    if (search) {
+      switch (filter) {
+        case "name":
+          query = sql`SELECT * FROM Tournaments WHERE LOWER(Name) LIKE ${ search.toLowerCase() + "%"}`;
+          break;
+        case "gameid":
+          query = sql`SELECT * FROM Tournaments WHERE CAST(GameID AS TEXT) LIKE ${"%" + search + "%"}`;
+          break;
+        case "status":
+          query = sql`SELECT * FROM Tournaments WHERE LOWER(Status) LIKE ${search.toLowerCase() + "%"}`;
+          break;
+        default:
+          query = sql`SELECT * FROM Tournaments`; // If no filter is provided, return all tournaments
       }
+    } else {
+      query = sql`SELECT * FROM Tournaments`;
+    }
 
-      const formattedResults = result.map(row => {
-          const dateObj = new Date(row.date);
-          dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset()); // Adjust timezone
-          return {
-              ...row,
-              date: dateObj.toISOString().split("T")[0] // Ensure correct date format
-          };
-      });
+    const result = await query;
 
-      res.json(formattedResults);
+    if (result.length === 0) {
+      return res.json([]);
+    }
+
+    // Formatting Date
+    const formattedResult = result.map(row => {
+      const dateObj = new Date(row.date);
+      dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset()); // Adjust timezone
+      return {
+        ...row,
+        date: dateObj.toISOString().split("T")[0] // Ensure correct date format
+      };
+    });
+
+    res.json(formattedResult);
   } catch (error) {
-      console.error("Error fetching tournaments:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error fetching tournaments:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
 
 //     // ✅ Fetch a tournament by ID (Used in /:id and /edit/:id routes)
 //     const getTournamentById = async (req, res) => {
