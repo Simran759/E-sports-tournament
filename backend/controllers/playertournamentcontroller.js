@@ -111,12 +111,43 @@ const sql = require("../init/db");
 // Get all tournaments
 const getAllTournaments = async (req, res) => {
     try {
-        const result = await sql`SELECT * FROM Tournaments`;
+        const { searchQuery, searchBy } = req.query; // Extract search parameters
+        let result;
+
+        if (searchQuery && searchBy) {
+            switch (searchBy) {
+                case "name":
+                    result = await sql`
+                        SELECT * FROM Tournaments WHERE Name ILIKE ${searchQuery + "%"}
+                    `;
+                    break;
+                case "gameid":
+                    result = await sql`
+                        SELECT * FROM Tournaments WHERE GameID::TEXT LIKE ${searchQuery + "%"}
+                    `;
+                    break;
+                case "status":
+                    result = await sql`
+                        SELECT * FROM Tournaments WHERE Status ILIKE ${searchQuery + "%"}
+                    `;
+                    break;
+                default:
+                    result = await sql`SELECT * FROM Tournaments`;
+            }
+        } else {
+            result = await sql`SELECT * FROM Tournaments`;
+        }
+
         res.json(result);
     } catch (error) {
+        console.error("❌ Failed to fetch tournaments:", error);
         res.status(500).json({ error: "Failed to fetch tournaments" });
     }
 };
+
+
+
+
 
 // Register for a tournament
 const registerForTournament = async (req, res) => {
