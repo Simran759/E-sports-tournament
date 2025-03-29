@@ -1,19 +1,47 @@
+// const express = require('express');
+// const router = express.Router();
+// const pool = require('../init/db'); // Import PostgreSQL connection
+// const { create, logout, show, updateTournament, getTournamentById ,deleteTournament,scheduleMatches,showMatches,showTeams} = require('../controllers/tournamentController');
+
+// // Tournament Routes
+// router.post('/create', create);
+// router.get('/show', show);
+// router.get("/:id", getTournamentById);  // Fetch tournament by ID
+// router.put('/update/:id', updateTournament); // Update tournament by ID
+// router.delete("/delete/:id",deleteTournament);
+// router.post("/schedule-matches/:id",scheduleMatches);
+// router.get("/:id/matches",showMatches);
+// router.get("/:id/teams",showTeams);
+// module.exports = router;
+
 const express = require('express');
 const router = express.Router();
-const pool = require('../init/db'); // Import PostgreSQL connection
-const { create, logout, show, updateTournament, getTournamentById ,deleteTournament,scheduleMatches,showMatches,showTeams} = require('../controllers/tournamentController');
+const { 
+    create, 
+    logout, 
+    show, 
+    updateTournament, 
+    getTournamentById,
+    deleteTournament,
+    scheduleMatches,
+    showMatches,
+    showTeams// Add the new function to fetch registered players
+} = require('../controllers/tournamentController');
 
 // Tournament Routes
 router.post('/create', create);
 router.get('/show', show);
 router.get("/:id", getTournamentById);  // Fetch tournament by ID
 router.put('/update/:id', updateTournament); // Update tournament by ID
-router.delete("/delete/:id",deleteTournament);
-router.post("/schedule-matches/:id",scheduleMatches);
-router.get("/:id/matches",showMatches);
-router.get("/:id/teams",showTeams);
-module.exports = router;
+router.delete("/delete/:id", deleteTournament);
+router.post("/schedule-matches/:id", scheduleMatches);
+router.get("/:id/matches", showMatches);
+router.get("/:id/teams", showTeams);
 
+// New route to fetch registered players of a tournament
+
+
+module.exports = router;
 
 
 
