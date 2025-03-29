@@ -389,6 +389,28 @@ const create = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+// const getTournamentPlayers = async (req, res) => {
+//   const { id } = req.params; // Tournament ID
+
+//   try {
+//       // Query to fetch all players registered in the tournament
+//       const result = await sql`
+//           SELECT teamcode, username, score 
+//           FROM teams 
+//           WHERE tournamentid = ${id}
+//           ORDER BY teamcode;
+//       `;
+
+//       if (result.length === 0) {
+//           return res.status(404).json({ error: "No players found for this tournament." });
+//       }
+
+//       res.json({ success: true, players: result });
+//   } catch (error) {
+//       console.error("Error fetching tournament players:", error);
+//       res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
 
 const show = async (req, res) => {
   const { search, filter } = req.query;
@@ -468,29 +490,41 @@ const getTournamentById = async (req, res) => {
   const { id } = req.params;
 
   try {
+      // Fetch tournament details
       const result = await sql`
-          SELECT * FROM Tournaments WHERE ID = ${id}
-      `;
+    SELECT id, name, ownerusername, status,date FROM Tournaments WHERE ID = ${id}
+`;
 
       if (result.length === 0) {
           return res.status(404).json({ error: "Tournament not found" });
       }
 
-      const formattedResult = result.map(row => {
-          const dateObj = new Date(row.date);
-          dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset()); // Adjust timezone
-          return {
-              ...row,
-              date: dateObj.toISOString().split("T")[0] // Ensure correct date format
-          };
-      });
+      // Fetch players
+      const players = await sql`
+          SELECT teamcode, username, score 
+          FROM teams 
+          WHERE tournamentid = ${id}
+          ORDER BY teamcode;
+      `;
 
-      res.json(formattedResult[0]);
+      // Fetch matches
+      const matches = await sql`
+          SELECT * FROM matches WHERE tournamentid = ${id}
+      `;
+
+      // Format date
+      const tournament = result[0];
+      const dateObj = new Date(tournament.date);
+      dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset());
+      tournament.date = dateObj.toISOString().split("T")[0];
+
+      res.json({ ...tournament, players, matches });
   } catch (error) {
       console.error("Error fetching tournament:", error);
       res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 const updateTournament = async (req, res) => {
   const { name, gameID, date, ownerUsername } = req.body;
