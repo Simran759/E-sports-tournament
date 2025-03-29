@@ -303,7 +303,7 @@
 //       alert("Failed to schedule matches ❌");
 //     }
 //   };
-
+// new comment
 //   if (loading) return <p className="text-center text-white">Loading tournament details...</p>;
 //   if (error) return <p className="text-center text-red-500">{error}</p>;
 
