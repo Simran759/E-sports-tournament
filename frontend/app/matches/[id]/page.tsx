@@ -22,23 +22,21 @@ export default function TournamentDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   
-  // Specify that `matches` is an array of `Match` objects
-  const [matches, setMatches] = useState<Match[]>([]); // Store matches data
-  const [isMatchesLoading, setMatchesLoading] = useState(false); // Track matches loading state
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [isMatchesLoading, setMatchesLoading] = useState(false);
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("userName");
-    const token=localStorage.getItem("token");
-    if(!token)
-    {
+    const token = localStorage.getItem("token");
+    if (!token) {
       router.push("/login");
       return;
     }
     if (!storedUserName) {
-      router.push("/signup"); // Redirect if not authenticated
+      router.push("/signup");
       return;
     }
-    setUserName(storedUserName); // Set username
+    setUserName(storedUserName);
   }, []);
 
   useEffect(() => {
@@ -53,9 +51,9 @@ export default function TournamentDetails() {
       const { name, date, status } = response.data;
       setTournamentName(name);
       setStatus(status);
-      setDate(date.split("T")[0]); // Format date for input field
+      setDate(date.split("T")[0]);
       if (status === "Ongoing") {
-        fetchMatches(); // Fetch matches if tournament is live
+        fetchMatches();
       }
     } catch (err) {
       console.error("Failed to load tournament details:", err);
@@ -66,73 +64,115 @@ export default function TournamentDetails() {
   };
 
   const fetchMatches = async () => {
-    setMatchesLoading(true); // Start loading matches
+    setMatchesLoading(true);
     try {
       const response = await axios.get(`http://localhost:5000/tournament/${id}/matches`);
-      console.log("Fetched matches:", response.data.matches);
-      setMatches(response.data.matches); // Store matches data
+      setMatches(response.data.matches);
     } catch (err) {
       console.error("Failed to load matches:", err);
       setError("Failed to load matches.");
     } finally {
-      setMatchesLoading(false); // Stop loading matches
+      setMatchesLoading(false);
     }
   };
-
-  useEffect(() => {
-    console.log("Matches state updated:", matches);
-  }, [matches]);
 
   if (loading) return <p className="text-center text-white">Loading tournament details...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-700 text-white">
-      <h1 className="text-3xl">🎮 Welcome to the {tournamentName}</h1>
-      <h6 className="text-1xl">Date: {date}</h6>
-      <h6 className="text-1xl">Status: {status}</h6>
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center text-white relative"
+      style={{ backgroundImage: "url('/19381.jpg')" }}
+    >
+      {/* Overlay for darker effect */}
+      <div className="absolute inset-0 bg-black/80 z-0"></div>
 
-      {status === "Ongoing" && (
-        <>
-          <h2 className="text-xl mt-4 font-bold text-green-500">Tournament is Live! 🎮</h2>
-          <p className="text-lg text-yellow-300">Here are the matches for this tournament:</p>
+      <div className="relative z-10 w-full max-w-5xl shadow-2xl p-8 space-y-8">
+        {/* Tournament Header */}
+        <h1
+          className="text-4xl font-bold text-center uppercase"
+          style={{
+            fontFamily: "'Press Start 2P', cursive",
+            color: "white",
+            textShadow: "0 0 15px rgba(255, 0, 0, 0.8)"
+          }}
+        >
+          {tournamentName}
+        </h1>
 
-          <div className="mt-4 p-4 bg-gray-800 rounded shadow-md w-full overflow-x-auto">
-            <h3 className="text-lg font-semibold">Matches:</h3>
+        <p className="text-center text-lg mb-2 text-gray-300" style={{ fontFamily: "'Press Start 2P', cursive" }}>
+          Date: {date}
+        </p>
+
+        <p
+          className={`text-center text-lg font-bold ${
+            status === "Ongoing" ? "text-yellow-400" : "text-red-400"
+          }`}
+          style={{ fontFamily: "'Press Start 2P', cursive" }}
+        >
+          Status: {status}
+        </p>
+
+        {/* Matches Section */}
+        {status === "Ongoing" && (
+          <>
+            <p
+              className="text-center text-yellow-300 text-lg"
+              style={{ fontFamily: "'Press Start 2P', cursive" }}
+            >
+              MATCHES:
+            </p>
 
             {isMatchesLoading ? (
               <p className="text-center text-white">Loading matches...</p>
-            ) : matches && matches.length > 0 ? (
-              <table className="min-w-full table-auto border-separate border-spacing-2">
-                <thead>
-                  <tr className="bg-gray-600">
-                    <th className="p-2 text-lg font-semibold text-center text-white">Match #</th>
-                    <th className="p-2 text-lg font-semibold text-center text-white">Player 1</th>
-                    <th className="p-2 text-lg font-semibold text-center text-white">Player 2</th>
-                    <th className="p-2 text-lg font-semibold text-center text-white">Winner</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {matches.map((match, index) => (
-                    <tr key={index} className="bg-gray-700 border-b-2 border-gray-500">
-                      <td className="p-3 text-center text-white">{index + 1}</td>
-                      <td className="p-3 text-center text-white">{match?.player1username || "N/A"}</td>
-                      <td className="p-3 text-center text-white">{match?.player2username || "N/A"}</td>
-                      <td className="p-3 text-center text-white">{match?.winnerusername || "TBD"}</td>
+            ) : matches.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full table-auto rounded-lg shadow-lg">
+                  <thead>
+                    <tr className="text-white text-center bg-gray-900">
+                      <th className="p-4 font-bold border-b border-gray-500"
+                      style={{ fontFamily: "'Press Start 2P', cursive" }}>Match #</th>
+                      <th className="p-4 font-bold border-b border-gray-500"
+                      style={{ fontFamily: "'Press Start 2P', cursive" }}>Player I</th>
+                      <th className="p-4 font-bold border-b border-gray-500"
+                      style={{ fontFamily: "'Press Start 2P', cursive" }}>Player II</th>
+                      <th className="p-4 font-bold border-b border-gray-500"
+                      style={{ fontFamily: "'Press Start 2P', cursive" }}>Winner</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {matches.map((match, index) => (
+                      <tr
+                        key={index}
+                        className="border-b border-gray-600 bg-gray-800 hover:bg-gray-700 transition duration-200"
+                      >
+                        <td className="p-4 text-center"
+                        style={{ fontFamily: "Rajdhani, sans-serif" }}>{index + 1}</td>
+                        <td className="p-4 text-center"
+                        style={{ fontFamily: "Rajdhani, sans-serif" }}>{match.player1username || "N/A"}</td>
+                        <td className="p-4 text-center"
+                        style={{ fontFamily: "Rajdhani, sans-serif" }}>{match.player2username || "N/A"}</td>
+                        <td className="p-4 text-center"
+                        style={{ fontFamily: "Rajdhani, sans-serif" }}>{match.winnerusername || "TBD"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
-              <p>No matches available yet.</p>
+              <p className="text-center text-white"
+              style={{ fontFamily: "Rajdhani, sans-serif" }}>NO MATCHES AVAILABLE</p>
             )}
-          </div>
-        </>
-      )}
+          </>
+        )}
 
-      {status !== "Ongoing" && (
-        <h2 className="text-xl mt-4 font-bold text-yellow-500">Tournament is not live yet!</h2>
-      )}
+        {status !== "Ongoing" && (
+          <h2 className="text-xl mt-4 font-bold text-yellow-500 text-center" 
+          style={{ fontFamily: "'Press Start 2P', cursive" }}>
+            Tournament is not live yet!
+          </h2>
+        )}
+      </div>
     </div>
   );
 }

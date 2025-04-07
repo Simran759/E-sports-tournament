@@ -424,7 +424,7 @@ const show = async (req, res) => {
           query = sql`SELECT * FROM Tournaments WHERE LOWER(Name) LIKE ${ search.toLowerCase() + "%"}`;
           break;
         case "gameid":
-          query = sql`SELECT * FROM Tournaments WHERE CAST(GameID AS TEXT) LIKE ${"%" + search + "%"}`;
+          query = sql`SELECT * FROM Tournaments WHERE CAST(GameID AS TEXT) LIKE ${ search + "%"}`;
           break;
         case "status":
           query = sql`SELECT * FROM Tournaments WHERE LOWER(Status) LIKE ${search.toLowerCase() + "%"}`;
@@ -492,7 +492,7 @@ const getTournamentById = async (req, res) => {
   try {
       // Fetch tournament details
       const result = await sql`
-    SELECT id, name, ownerusername, status,date FROM Tournaments WHERE ID = ${id}
+    SELECT id, name, ownerusername, status,date,gameid FROM Tournaments WHERE ID = ${id}
 `;
 
       if (result.length === 0) {
@@ -596,7 +596,7 @@ const scheduleMatches = async (req, res) => {
   const { id: tournamentId } = req.params;
 
   try {
-    // Check if tournament exists and is 'Upcoming'
+    // 1. Check if the tournament exists and is 'Upcoming'
     const tournamentRes = await sql`
       SELECT status FROM Tournaments WHERE id = ${tournamentId}
     `;
@@ -609,51 +609,62 @@ const scheduleMatches = async (req, res) => {
       return res.status(400).json({ error: "Matches already scheduled for this tournament." });
     }
 
-    // Fetch already scheduled players
+    // 2. Fetch existing matches (already scheduled players)
     const existingMatches = await sql`
-      SELECT player1username, player2username FROM matches WHERE tournamentid = ${tournamentId}
+      SELECT player1username, player2username 
+      FROM matches 
+      WHERE tournamentid = ${tournamentId}
     `;
 
-    let usedPlayers = new Set();
+    const usedPlayers = new Set();
     existingMatches.forEach(match => {
       usedPlayers.add(match.player1username);
       usedPlayers.add(match.player2username);
     });
 
-    // Fetch teams and players
+    // 3. Fetch all teams and their players
     const teamRes = await sql`
-      SELECT teamcode, username FROM teams WHERE tournamentid = ${tournamentId}
+      SELECT teamcode, username 
+      FROM teams 
+      WHERE tournamentid = ${tournamentId}
     `;
 
-    let teamDict = {};
+    const teamDict = {};
     teamRes.forEach(row => {
-      if (!teamDict[row.teamcode]) teamDict[row.teamcode] = [];
+      if (!teamDict[row.teamcode]) {
+        teamDict[row.teamcode] = [];
+      }
       teamDict[row.teamcode].push(row.username);
     });
 
-    let teamCodes = Object.keys(teamDict);
+    const teamCodes = Object.keys(teamDict);
+
     if (teamCodes.length < 2) {
       return res.status(400).json({ error: "Not enough teams to create matches." });
     }
 
-    let matches = [];
+    // 4. Schedule Matches
+    const matches = [];
 
     while (true) {
-      let availableTeams = teamCodes.filter(tc => teamDict[tc].some(p => !usedPlayers.has(p)));
+      const availableTeams = teamCodes.filter(tc =>
+        teamDict[tc].some(p => !usedPlayers.has(p))
+      );
+
       if (availableTeams.length < 2) break;
 
-      let team1 = availableTeams[0];
-      let team2 = availableTeams[1];
+      const team1 = availableTeams[0];
+      const team2 = availableTeams[1];
 
-      let player1 = teamDict[team1].find(p => !usedPlayers.has(p));
-      let player2 = teamDict[team2].find(p => !usedPlayers.has(p));
+      const player1 = teamDict[team1].find(p => !usedPlayers.has(p));
+      const player2 = teamDict[team2].find(p => !usedPlayers.has(p));
 
       if (player1 && player2) {
         matches.push({
           tournament_id: tournamentId,
           player1username: player1,
           player2username: player2,
-          winning_team_code: null
+          winnerusername: null
         });
 
         usedPlayers.add(player1);
@@ -665,18 +676,18 @@ const scheduleMatches = async (req, res) => {
       return res.status(400).json({ error: "No new matches could be scheduled." });
     }
 
-    // Insert scheduled matches into the database
+    // 5. Insert matches
     await Promise.all(
       matches.map(match =>
         sql`
           INSERT INTO matches (tournamentid, player1username, player2username, winnerusername) 
-          VALUES (${match.tournament_id}, ${match.player1username}, ${match.player2username}, ${match.winning_team_code})
-          RETURNING *;
+          VALUES (${match.tournament_id}, ${match.player1username}, ${match.player2username}, ${match.winnerusername})
         `
       )
     );
 
     res.status(200).json({ message: "Matches scheduled successfully ✅", matches });
+
   } catch (err) {
     console.error("Error scheduling matches:", err);
     res.status(500).json({ error: "Failed to schedule matches" });

@@ -58,6 +58,7 @@ export default function AuthForm({ action }: AuthFormProps) {
           {action === "signup" && (
             <input
               className="p-3 bg-black-700 font-mono text-white rounded-md focus:outline-none focus:ring-gray-500 placeholder-gray-300 text-center"
+              style={{ fontFamily: "Rajdhani, sans-serif" }}
               type="text"
               placeholder="Username"
               value={username}
@@ -70,6 +71,7 @@ export default function AuthForm({ action }: AuthFormProps) {
           <input
             className="p-3 bg-black-700 font-mono text-white rounded-md focus:outline-none focus:ring-gray-500 placeholder-gray-300 text-center"
             type="email"
+            style={{ fontFamily: "Rajdhani, sans-serif" }}
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -80,6 +82,7 @@ export default function AuthForm({ action }: AuthFormProps) {
           <input
             className="p-3 bg-black-700 font-mono text-white rounded-md focus:outline-none focus:ring-gray-500 placeholder-gray-300 text-center"
             type="password"
+            style={{ fontFamily: "Rajdhani, sans-serif" }}
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -90,6 +93,7 @@ export default function AuthForm({ action }: AuthFormProps) {
           {action === "signup" && (
            <select
            className="p-3 bg-black-700 font -mono text-white font-mono rounded-md focus:outline-none focus:ring-gray-500"
+           style={{ fontFamily: "Rajdhani, sans-serif" }}
            value={role}
            onChange={(e) => setRole(e.target.value as "admin" | "player")}
          >
@@ -106,6 +110,7 @@ export default function AuthForm({ action }: AuthFormProps) {
             type="submit"
             disabled={loading}
             className="bg-gray-700 font-mono hover:bg-gray-800 px-6 py-3 text-white rounded-none font-semibold text-lg transition-all"
+            style={{ fontFamily: "'Press Start 2P', cursive" }}
           >
             {loading ? "Processing..." : action === "signup" ? "SIGN UP" : "LOGIN"}
           </motion.button>

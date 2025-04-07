@@ -93,17 +93,21 @@ export default function Auth() {
           className="flex flex-col gap-8 relative z-10"
         >
           <div className="flex flex-col items-center">
-            <span className="text-sm font-mono text-gray-400 mb-2">New here?</span>
+            <span className="text-sm font-mono text-gray-400 mb-2"
+            style={{ fontFamily: "Rajdhani, sans-serif" }}>New here?</span>
             <Link href="/signup" className="w-full">
-              <Button className="bg-gray-700 font-mono font-bold hover:bg-gray-800 px-8 py-3 text-white rounded-none text-lg w-full" aria-label="Sign Up">
+              <Button className="bg-gray-700 font-mono font-bold hover:bg-gray-800 px-8 py-6 text-white rounded-none text-lg w-full" aria-label="Sign Up"
+              style={{ fontFamily: "'Press Start 2P', cursive" }}>
                 SIGN UP
               </Button>
             </Link>
           </div>
           <div className="flex flex-col items-center">
-            <span className="text-sm font-mono text-gray-400 mb-2">Existing user?</span>
+            <span className="text-sm font-mono text-gray-400 mb-2"
+            style={{ fontFamily: "Rajdhani, sans-serif" }}>Existing user?</span>
             <Link href="/login" className="w-full">
-              <Button className="bg-gray-700 font-mono font-bold hover:bg-gray-800 px-8 py-3 text-white rounded-none text-lg w-full" aria-label="Login">
+              <Button className="bg-gray-700 font-mono font-bold hover:bg-gray-800 px-10 py-6 text-white rounded-none text-lg w-full" aria-label="Login"
+              style={{ fontFamily: "'Press Start 2P', cursive" }}>
                 LOGIN
               </Button>
             </Link>
