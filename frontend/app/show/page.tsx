@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-
+const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
 export default function ShowPage() {
   const router = useRouter();
   const [tournaments, setTournaments] = useState<any[]>([]);
@@ -24,7 +24,7 @@ export default function ShowPage() {
 
   const fetchTournaments = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/tournament/show");
+      const response = await axios.get(`${baseurl}/tournament/show`);
       setTournaments(response.data);
     } catch (err) {
       setError("Failed to fetch tournaments.");

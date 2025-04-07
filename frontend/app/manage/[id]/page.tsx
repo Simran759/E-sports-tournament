@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
-
+const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
 export default function TournamentDetails() {
   const router = useRouter();
   const { id } = useParams();
@@ -38,7 +38,7 @@ export default function TournamentDetails() {
 
   const fetchTournamentDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/tournament/${id}`);
+      const response = await axios.get(`${baseurl}/tournament/${id}`);
       const { name, date, status } = response.data;
       console.log("Username set from localStorage:", username);
       setTournamentName(name);

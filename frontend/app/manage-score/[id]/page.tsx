@@ -143,7 +143,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import axios from "axios";
-
+const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
 interface ScoreFormProps {
   matchId: number;
 }
@@ -168,7 +168,7 @@ export default function ScoreForm({ matchId }: ScoreFormProps) {
 
     const fetchMatchDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/matches/${id}`);
+        const response = await axios.get(`${baseurl}/matches/${id}`);
         const { player1username, player2username } = response.data;
         setPlayer1(player1username);
         setPlayer2(player2username);
@@ -208,7 +208,7 @@ export default function ScoreForm({ matchId }: ScoreFormProps) {
         player2username: player2,
       };
 
-      await axios.put("http://localhost:5000/matches/score", payload);
+      await axios.put(`${baseurl}/matches/score`, payload);
       alert("Score updated successfully ✅");
       router.push(`/dynamic-matches/${tournamentId}`);
     } catch (error: any) {

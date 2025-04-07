@@ -3,10 +3,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import axios from "axios";
-
 interface AuthFormProps {
   action: "signup" | "login";
 }
+const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
 
 export default function AuthForm({ action }: AuthFormProps) {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function AuthForm({ action }: AuthFormProps) {
     try {
       const payload =
         action === "signup" ? { username, email, password, role } : { email, password };
-      const response = await axios.post(`http://localhost:5000/auth/${action}`, payload);
+      const response = await axios.post(`${baseurl}/auth/${action}`, payload);
       
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);

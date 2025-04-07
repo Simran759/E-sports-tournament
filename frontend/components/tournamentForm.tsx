@@ -9,7 +9,7 @@ export default function CreateTournament() {
   const [gameID, setGameID] = useState("");
   const [date, setDate] = useState("");
   const [ownerUsername, setOwnerUsername] = useState("");
-
+  const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
   useEffect(() => {
     const username = localStorage.getItem("userName");
     const token = localStorage.getItem("token");
@@ -34,7 +34,7 @@ export default function CreateTournament() {
         return;
       }
 
-      await axios.post("http://localhost:5000/tournament/create", payload);
+      await axios.post(`${baseurl}/tournament/create`, payload);
       alert("Tournament added successfully ✅");
       router.push("/admin-dashboard");
     } catch (error: any) {

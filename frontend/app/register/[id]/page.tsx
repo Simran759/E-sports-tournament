@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { motion } from "framer-motion";
-
+const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
 export default function RegisterTournament() {
   const router = useRouter();
   const { id } = useParams();
@@ -38,7 +38,7 @@ export default function RegisterTournament() {
 
   const fetchTournamentDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/tournament/${id}`);
+      const response = await axios.get(`${baseurl}/tournament/${id}`);
       const { name, date } = response.data;
 
       setTournamentName(name);
@@ -55,7 +55,7 @@ export default function RegisterTournament() {
     e.preventDefault();
     try {
       const payload = { teamCode, username };
-      await axios.post(`http://localhost:5000/player-tournaments/register/${id}`, payload);
+      await axios.post(`${baseurl}/player-tournaments/register/${id}`, payload);
   
       alert("Registration successful ✅");
       router.push("/player-tournaments");

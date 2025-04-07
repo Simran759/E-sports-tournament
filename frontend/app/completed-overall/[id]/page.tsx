@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { motion } from "framer-motion";
-
+const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
 type Team = {
   id: number;
   teamcode: string;
@@ -52,7 +52,7 @@ export default function TournamentDetails() {
 
   const fetchTournamentDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/tournament/${id}`);
+      const response = await axios.get(`${baseurl}/tournament/${id}`);
       const { name, date, status } = response.data;
       setTournamentName(name);
       setStatus(status);
@@ -72,7 +72,7 @@ export default function TournamentDetails() {
   const fetchTeams = async () => {
     setTeamsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/tournament/${id}/teams`);
+      const response = await axios.get(`${baseurl}/tournament/${id}/teams`);
       setTeams(response.data.teams);
     } catch (err) {
       console.error("Failed to load teams:", err);

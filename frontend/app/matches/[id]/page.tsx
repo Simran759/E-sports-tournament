@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
-
+const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
 // Define the type for the match
 type Match = {
   id: number;
@@ -47,7 +47,7 @@ export default function TournamentDetails() {
 
   const fetchTournamentDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/tournament/${id}`);
+      const response = await axios.get(`${baseurl}/tournament/${id}`);
       const { name, date, status } = response.data;
       setTournamentName(name);
       setStatus(status);
@@ -66,7 +66,7 @@ export default function TournamentDetails() {
   const fetchMatches = async () => {
     setMatchesLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/tournament/${id}/matches`);
+      const response = await axios.get(`${baseurl}/tournament/${id}/matches`);
       setMatches(response.data.matches);
     } catch (err) {
       console.error("Failed to load matches:", err);

@@ -386,7 +386,7 @@ export default function TournamentDetails() {
   const [players, setPlayers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
   const userName =
     typeof window !== "undefined" ? localStorage.getItem("userName") : null;
   const isAdmin = userName === tournament?.ownerusername;
@@ -397,7 +397,7 @@ export default function TournamentDetails() {
 
   const fetchTournamentDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/tournament/${id}`);
+      const response = await axios.get(`${baseurl}/tournament/${id}`);
       setTournament(response.data);
       setPlayers(response.data.players || []);
     } catch (err: any) {
@@ -424,7 +424,7 @@ export default function TournamentDetails() {
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this tournament?")) return;
     try {
-      await axios.delete(`http://localhost:5000/tournament/delete/${id}`);
+      await axios.delete(`${baseurl}/tournament/delete/${id}`);
       alert("Tournament deleted successfully ✅");
       router.push("/show");
     } catch (err: any) {
@@ -437,8 +437,7 @@ export default function TournamentDetails() {
   const handleScheduleMatches = async () => {
     if (!confirm("Are you sure you want to schedule matches?")) return;
     try {
-      const response = await axios.post(
-        `http://localhost:5000/tournament/schedule-matches/${id}`
+      const response = await axios.post(`${baseurl}/tournament/schedule-matches/${id}`
       );
       alert("Matches scheduled successfully ✅");
     } catch (err: any) {

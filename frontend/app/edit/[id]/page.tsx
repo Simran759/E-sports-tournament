@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
-
+const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
 export default function EditTournament() {
   const router = useRouter();
   const { id } = useParams();
@@ -37,7 +37,7 @@ export default function EditTournament() {
 
   const fetchTournamentDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/tournament/${id}`);
+      const response = await axios.get(`${baseurl}/tournament/${id}`);
       const { name, gameid, date } = response.data;
 
       setName(name ?? "");  // Fallback to empty string
@@ -64,7 +64,7 @@ export default function EditTournament() {
       }
 
       const payload = { name, gameID, date, ownerUsername };
-      await axios.put(`http://localhost:5000/tournament/update/${id}`, payload);
+      await axios.put(`${baseurl}/tournament/update/${id}`, payload);
 
       alert("Tournament updated successfully ✅");
       router.push("/show");
