@@ -53,7 +53,7 @@ export default function JoinTournament() {
     e.preventDefault();
     try {
       const payload = { teamCode, username };
-      await axios.post(`${baseurl}}/player-tournaments/join/${id}`, payload);
+      await axios.post(`${baseurl}/player-tournaments/join/${id}`, payload);
       alert("Successfully joined the team ✅");
       router.push("/player-tournaments");
     } catch (error: any) {
