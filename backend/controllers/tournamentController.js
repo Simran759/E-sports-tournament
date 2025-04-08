@@ -558,7 +558,7 @@ const updateTournament = async (req, res) => {
       });
 
       const date1 = formattedResults[0].date;
-      console.log(date1, formattedToday);
+      // console.log(date1, formattedToday);
       const status = date1 > formattedToday ? "Upcoming" : "Ongoing";
 
       const result3 = await sql`

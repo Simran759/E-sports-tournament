@@ -116,7 +116,7 @@ const signup = async (req, res) => {
     RETURNING userName, Role
 `;
 const user=result[0];
-console.log(user);
+// console.log(user);
 
         const token = jwt.sign({ id: user.username, role: role }, JWT_SECRET, { expiresIn: '1h' });
 
@@ -136,7 +136,7 @@ const login = async (req, res) => {
 
     try {
         const result = await sql`SELECT * FROM Users WHERE Email = ${email}`;
-        console.log("Login Query Result:", result); // Debugging
+        // console.log("Login Query Result:", result); // Debugging
 
         if (result.length === 0) {
             return res.status(401).json({ error: 'Invalid credentials' });
