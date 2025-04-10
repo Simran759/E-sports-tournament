@@ -886,7 +886,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import axios from "axios";
 import { Edit3, Trash2, CalendarClock, Trophy, List } from "lucide-react";
-
+const baseurl=process.env.NEXT_PUBLIC_API_BASE_URL
 export default function TournamentDetails() {
   const router = useRouter();
   const { id } = useParams();
@@ -905,7 +905,7 @@ export default function TournamentDetails() {
 
   const fetchTournamentDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/tournament/${id}`);
+      const response = await axios.get(`${baseurl}/tournament/${id}`);
       setTournament(response.data);
       setPlayers(response.data.players || []);
     } catch (err: any) {
@@ -931,7 +931,7 @@ export default function TournamentDetails() {
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this tournament?")) return;
     try {
-      await axios.delete(`http://localhost:5000/tournament/delete/${id}`);
+      await axios.delete(`${baseurl}/tournament/delete/${id}`);
       alert("Tournament deleted successfully ✅");
       router.push("/show");
     } catch (err: any) {
@@ -944,7 +944,7 @@ export default function TournamentDetails() {
     if (!confirm("Are you sure you want to schedule matches?")) return;
     try {
       const response = await axios.post(
-        `http://localhost:5000/tournament/schedule-matches/${id}`
+        `${baseurl}/tournament/schedule-matches/${id}`
       );
       alert("Matches scheduled successfully ✅");
     } catch (err: any) {
