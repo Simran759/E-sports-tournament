@@ -110,7 +110,7 @@ export default function JoinTournament() {
         {/* Form */}
         <form onSubmit={handleJoin} className="flex flex-col space-y-6">
           <input
-            className="p-4 text-med rounded-lg text-black text-center placeholder-gray-500 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            className="p-4 text-med rounded-lg text-white text-center placeholder-gray-500 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             type="text"
             placeholder="Enter Team Code"
             value={teamCode}
@@ -121,7 +121,7 @@ export default function JoinTournament() {
 
           <motion.button
             type="submit"
-            className="w-full py-3 rounded-lg bg-blue-600 text-black font-bold hover:bg-gray-700 hover:text-yellow-300 transition-all shadow-lg"
+            className="w-full py-3 rounded-lg bg-blue-600 text-white font-bold hover:bg-gray-700 hover:text-yellow-300 transition-all shadow-lg"
             whileTap={{ scale: 0.95 }}
             style={{ fontFamily: "'Press Start 2P', cursive" }}
           >

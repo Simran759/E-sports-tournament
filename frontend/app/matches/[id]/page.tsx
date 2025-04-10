@@ -129,7 +129,7 @@ export default function TournamentDetails() {
               <div className="overflow-x-auto">
                 <table className="w-full table-auto rounded-lg shadow-lg">
                   <thead>
-                    <tr className="text-white text-center bg-gray-900">
+                    <tr className="text-white text-center bg-gray-700">
                       <th className="p-4 font-bold border-b border-gray-500"
                       style={{ fontFamily: "'Press Start 2P', cursive" }}>Match #</th>
                       <th className="p-4 font-bold border-b border-gray-500"
@@ -144,7 +144,7 @@ export default function TournamentDetails() {
                     {matches.map((match, index) => (
                       <tr
                         key={index}
-                        className="border-b border-gray-600 bg-gray-800 hover:bg-gray-700 transition duration-200"
+                        className="border-b border-gray-600 bg-transparent transition duration-200"
                       >
                         <td className="p-4 text-center"
                         style={{ fontFamily: "Rajdhani, sans-serif" }}>{index + 1}</td>
