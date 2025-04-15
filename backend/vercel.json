@@ -21,6 +21,7 @@
     ],
     "crons": [
       {
+        
         "path": "/api/updateTournaments",
         "schedule": "0 */12 * * *"
       },
