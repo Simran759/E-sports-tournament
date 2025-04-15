@@ -19,18 +19,21 @@
         "use": "@vercel/node"
       }
     ],
-    "functions": {
-      "api/updateTournaments.js": {
-        "runtime": "nodejs18.x",
-        "schedule": "0 */12 * * *"
+    "crons": [
+      {
+        "path": "/api/updateTournaments",
+        "schedule": "0 */12 * * *"   
       },
-      "api/scheduleMatches.js": {
-        "runtime": "nodejs18.x",
-        "schedule": "0 0 * * *"
+      {
+        "path": "/api/scheduleMatches",
+        "schedule": "0 0 * * *"       
       }
-    },
+    ],
     "routes": [
-      { "src": "/(.*)", "dest": "/" }
+      {
+        "src": "/(.*)",
+        "dest": "/"
+      }
     ]
   }
   
