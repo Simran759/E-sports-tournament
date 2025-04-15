@@ -1,40 +1,19 @@
 {
-    "version": 2,
-    "installCommand": "npm install --legacy-peer-deps",
-    "builds": [
-      {
-        "src": "index.js",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "src/**/*",
+    "installCommand":"npm install --legacy-peer-deps",
+    "version":2,
+    "builds":[
+        {
+            "src":"index.js",
+            "use":"@vercel/node"
+        }
+    ,
+    {
+        "src":"src/**/*",
         "use": "@vercel/static"
-      },
-      {
-        "src": "api/updateTournaments.js",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "api/scheduleMatches.js",
-        "use": "@vercel/node"
-      }
+    }
     ],
-    "crons": [
-      {
-        "path": "/api/updateTournaments",
-        "schedule": "0 */12 * * *"   
-      },
-      {
-        "path": "/api/scheduleMatches",
-        "schedule": "0 0 * * *"       
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/"
-      }
+    "routes":
+    [
+        {"src":"/(.*)","dest":"/"}
     ]
-  }
-  
-  
+}
