@@ -3,34 +3,37 @@
     "installCommand": "npm install --legacy-peer-deps",
     "builds": [
       {
-        "src": "index.js",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "src/**/*",
-        "use": "@vercel/static"
-      },
-      {
         "src": "api/updateTournaments.js",
         "use": "@vercel/node"
       },
       {
         "src": "api/scheduleMatches.js",
         "use": "@vercel/node"
+      },
+      {
+        "src": "index.js",
+        "use": "@vercel/node"
+      },
+      {
+        "src": "src/**/*",
+        "use": "@vercel/static"
       }
     ],
-    "functions": {
-      "api/updateTournaments.js": {
-        "runtime": "nodejs18.x",
+    "crons": [
+      {
+        "path": "/api/updateTournaments",
         "schedule": "0 */12 * * *"
       },
-      "api/scheduleMatches.js": {
-        "runtime": "nodejs18.x",
+      {
+        "path": "/api/scheduleMatches",
         "schedule": "0 0 * * *"
       }
-    },
+    ],
     "routes": [
-      { "src": "/(.*)", "dest": "/" }
+      {
+        "src": "/(.*)",
+        "dest": "/"
+      }
     ]
   }
   
