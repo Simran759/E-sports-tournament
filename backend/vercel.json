@@ -3,11 +3,11 @@
     "installCommand": "npm install --legacy-peer-deps",
     "builds": [
       {
-        "src": "api/updateTournaments.js",
+        "src": "/api/updateTournaments.js",
         "use": "@vercel/node"
       },
       {
-        "src": "api/scheduleMatches.js",
+        "src": "/api/scheduleMatches.js",
         "use": "@vercel/node"
       },
       {
